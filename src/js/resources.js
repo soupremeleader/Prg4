@@ -1,9 +1,11 @@
-import { ImageSource, Sound, Resource, Loader } from 'excalibur'
-import fishImage from '../images/fish.png'
+import { ImageSource, Loader } from 'excalibur'
+import playerImage from '../images/spritesheet witch.png'
+import idlePlayerImage from '../images/spritesheet witch idle.png'
 
 const Resources = {
-    Fish: new ImageSource(fishImage)
+    Player: new ImageSource(playerImage),
+    IdlePlayer: new ImageSource(idlePlayerImage),
 }
-const ResourceLoader = new Loader([Resources.Fish])
+const ResourceLoader = new Loader([Resources.Player, Resources.IdlePlayer])
 
 export { Resources, ResourceLoader }

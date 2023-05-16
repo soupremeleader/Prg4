@@ -1,0 +1,179 @@
+import {Actor, Animation, CollisionType, Input, SpriteSheet, Vector} from "excalibur";
+import {Collectable} from "./Collectable.js";
+import {Resources} from "../resources";
+
+const INPUT_KEY_UP = Input.Keys.W;
+const INPUT_KEY_LEFT = Input.Keys.A;
+const INPUT_KEY_RIGHT = Input.Keys.D;
+const INPUT_KEY_DOWN = Input.Keys.S;
+const INPUT_INTERACT_KEY = Input.Keys.X;
+const INPUT_MENU_KEY = Input.Keys.F;
+
+const UP_VELOCITY = -50;
+const LEFT_VELOCITY = -50;
+const RIGHT_VELOCITY = 50;
+const DOWN_VELOCITY = 50;
+
+let isLeftFacing = true;
+
+let sprite0, sprite1, sprite2, sprite3, sprite4, idleAnimation, walkingLeftAnimation, walkingRightAnimation;
+
+export class Player extends Actor {
+    inventory;
+    menuScene;
+
+    constructor(menuScene) {
+        super({
+            collisionType: CollisionType.Active,
+            height: 131,
+            width: 108,
+        });
+        this.inventory = {feather: false, flowers: false, leaf: false};
+        this.menuScene = menuScene;
+        this.initGraphics();
+    }
+
+    update(engine, delta) {
+        let isPressingMoveUpKey = engine.input.keyboard.isHeld(INPUT_KEY_UP);
+        let isPressingMoveLeftKey = engine.input.keyboard.isHeld(INPUT_KEY_LEFT);
+        let isPressingMoveRightKey = engine.input.keyboard.isHeld(INPUT_KEY_RIGHT);
+        let isPressingMoveDownKey = engine.input.keyboard.isHeld(INPUT_KEY_DOWN);
+        let isPressingMenuKey = engine.input.keyboard.isHeld(INPUT_MENU_KEY);
+
+        let x = 0;
+        let y = 0;
+        if (isPressingMoveUpKey) {
+            y = UP_VELOCITY;
+            isLeftFacing ? this.graphics.use(walkingLeftAnimation) : this.graphics.use(walkingRightAnimation);
+        }
+
+        if (isPressingMoveLeftKey) {
+            x = LEFT_VELOCITY;
+            this.graphics.use(walkingLeftAnimation);
+
+            if (!isLeftFacing) {
+                isLeftFacing = !isLeftFacing;
+            }
+        }
+
+        if (isPressingMoveRightKey) {
+            x = RIGHT_VELOCITY;
+            this.graphics.use(walkingRightAnimation);
+
+            if (isLeftFacing) {
+                isLeftFacing = !isLeftFacing;
+            }
+        }
+
+        if (isPressingMoveDownKey) {
+            y = DOWN_VELOCITY;
+
+            isLeftFacing ? this.graphics.use(walkingLeftAnimation) : this.graphics.use(walkingRightAnimation);
+        }
+
+        if (x === 0 && y === 0) {
+            isLeftFacing ? this.graphics.use(walkingLeftAnimation) : this.graphics.use(walkingRightAnimation);
+        }
+
+        if (isPressingMenuKey) {
+            engine.goToScene(this.menuScene, this.inventory);
+        }
+
+        this.vel = new Vector(x, y);
+    }
+
+    interAct(engine, event) {
+        if (event.other instanceof Collectable) {
+            this.inventory[event.other.name] = true;
+        }
+        console.log(this.inventory);
+    }
+
+    onInitialize(engine) {
+        this.on('precollision', (event) => {
+            let isPressingInteractionKey = engine.input.keyboard.wasPressed(INPUT_INTERACT_KEY);
+            if (isPressingInteractionKey) {
+                this.interAct(engine, event);
+            }
+        })
+    }
+
+    initGraphics = () => {
+        const spriteSheet = SpriteSheet.fromImageSource({
+            image: Resources.Player,
+            grid: {
+                rows: 1,
+                columns: 3,
+                spriteWidth: 108,
+                spriteHeight: 131,
+            },
+        });
+        sprite0 = spriteSheet.getSprite(0, 0);
+        if (!sprite0) return;
+        sprite0.width = 108;
+        sprite0.height = 131;
+        sprite1 = spriteSheet.getSprite(1, 0);
+        if (!sprite1) return;
+        sprite1.width = 108;
+        sprite1.height = 131;
+        sprite2 = spriteSheet.getSprite(2, 0);
+        if (!sprite2) return;
+        sprite2.width = 108;
+        sprite2.height = 131;
+
+        const spriteSheetIdle = SpriteSheet.fromImageSource({
+            image: Resources.Player,
+            grid: {
+                rows: 1,
+                columns: 3,
+                spriteWidth: 108,
+                spriteHeight: 131,
+            },
+        });
+        sprite3 = spriteSheetIdle.getSprite(0, 0);
+        if (!sprite3) return;
+        sprite3.width = 108;
+        sprite3.height = 131;
+        sprite4 = spriteSheetIdle.getSprite(1, 0);
+        if (!sprite4) return;
+        sprite4.width = 108;
+        sprite4.height = 131;
+
+        walkingLeftAnimation = new Animation({
+            frames: [
+                {
+                    graphic: sprite0,
+                    duration: 250,
+                },
+                {
+                    graphic: sprite1,
+                    duration: 250,
+                },
+                {
+                    graphic: sprite2,
+                    duration: 250,
+                },
+                {
+                    graphic: sprite1,
+                    duration: 250,
+                },
+            ],
+        });
+
+        walkingRightAnimation = walkingLeftAnimation.clone();
+        walkingRightAnimation.flipHorizontal = true;
+
+        idleAnimation = new Animation({
+            frames: [
+                {
+                    graphic: sprite3,
+                    duration: 1000,
+                },
+                {
+                    graphic: sprite4,
+                    duration: 1000,
+                },
+            ]
+        });
+    };
+}
