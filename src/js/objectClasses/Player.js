@@ -1,13 +1,10 @@
 import {Actor, Animation, CollisionType, Input, SpriteSheet, Vector} from "excalibur";
-import {Collectable} from "./Collectable.js";
 import {Resources} from "../resources";
 
 const INPUT_KEY_UP = Input.Keys.W;
 const INPUT_KEY_LEFT = Input.Keys.A;
 const INPUT_KEY_RIGHT = Input.Keys.D;
 const INPUT_KEY_DOWN = Input.Keys.S;
-const INPUT_INTERACT_KEY = Input.Keys.X;
-const INPUT_MENU_KEY = Input.Keys.F;
 
 const UP_VELOCITY = -50;
 const LEFT_VELOCITY = -50;
@@ -19,26 +16,20 @@ let isLeftFacing = true;
 let sprite0, sprite1, sprite2, sprite3, sprite4, idleAnimation, walkingLeftAnimation, walkingRightAnimation;
 
 export class Player extends Actor {
-    inventory;
-    menuScene;
-
-    constructor(menuScene) {
+    constructor() {
         super({
             collisionType: CollisionType.Active,
             height: 131,
             width: 108,
         });
-        this.inventory = {feather: false, flowers: false, leaf: false};
-        this.menuScene = menuScene;
         this.initGraphics();
     }
 
-    update(engine, delta) {
-        let isPressingMoveUpKey = engine.input.keyboard.isHeld(INPUT_KEY_UP);
-        let isPressingMoveLeftKey = engine.input.keyboard.isHeld(INPUT_KEY_LEFT);
-        let isPressingMoveRightKey = engine.input.keyboard.isHeld(INPUT_KEY_RIGHT);
-        let isPressingMoveDownKey = engine.input.keyboard.isHeld(INPUT_KEY_DOWN);
-        let isPressingMenuKey = engine.input.keyboard.isHeld(INPUT_MENU_KEY);
+    onPostUpdate(_engine, _delta) {
+        let isPressingMoveUpKey = _engine.input.keyboard.isHeld(INPUT_KEY_UP);
+        let isPressingMoveLeftKey = _engine.input.keyboard.isHeld(INPUT_KEY_LEFT);
+        let isPressingMoveRightKey = _engine.input.keyboard.isHeld(INPUT_KEY_RIGHT);
+        let isPressingMoveDownKey = _engine.input.keyboard.isHeld(INPUT_KEY_DOWN);
 
         let x = 0;
         let y = 0;
@@ -72,30 +63,10 @@ export class Player extends Actor {
         }
 
         if (x === 0 && y === 0) {
-            isLeftFacing ? this.graphics.use(walkingLeftAnimation) : this.graphics.use(walkingRightAnimation);
-        }
-
-        if (isPressingMenuKey) {
-            engine.goToScene(this.menuScene, this.inventory);
+            this.graphics.use(idleAnimation);
         }
 
         this.vel = new Vector(x, y);
-    }
-
-    interAct(engine, event) {
-        if (event.other instanceof Collectable) {
-            this.inventory[event.other.name] = true;
-        }
-        console.log(this.inventory);
-    }
-
-    onInitialize(engine) {
-        this.on('precollision', (event) => {
-            let isPressingInteractionKey = engine.input.keyboard.wasPressed(INPUT_INTERACT_KEY);
-            if (isPressingInteractionKey) {
-                this.interAct(engine, event);
-            }
-        })
     }
 
     initGraphics = () => {

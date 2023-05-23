@@ -3,11 +3,11 @@ import {Actor, CollisionType, Input} from "excalibur";
 const INPUT_INTERACT_KEY = Input.Keys.X;
 
 export class NonPlayer extends Actor {
-    constructor(newWidth, newHeight) {
+    constructor(resource) {
         super({
             collisionType: CollisionType.Fixed,
-            height: newHeight,
-            width: newWidth
+            height: resource.height,
+            width: resource.width,
         });
     }
 
