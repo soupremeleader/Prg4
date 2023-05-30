@@ -1,13 +1,9 @@
-import {NonPlayer} from "./NonPlayer.js";
-import {Vector} from "excalibur";
+import {NonPlayer} from "../../NonPlayer.js";
 
 export class Collectable extends NonPlayer {
-    name;
-    constructor(name, newWidth, newHeight, resource) {
-        super(resource);
-        this.name = name;
+    constructor(name, width, height, spriteWidth, spriteHeight,  resource, collisionType) {
+        super(name, width, height, spriteWidth, spriteHeight,  resource, collisionType);
         this.graphics.use(resource.toSprite());
-        this.scale = new Vector(newWidth/resource.width, newHeight/resource.height);
     }
 
     interAct(engine, event) {

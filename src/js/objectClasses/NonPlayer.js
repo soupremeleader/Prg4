@@ -1,14 +1,20 @@
-import {Actor, CollisionType, Input} from "excalibur";
+import {Actor, Input, Vector} from "excalibur";
+import {Player} from "./Player.js";
 
 const INPUT_INTERACT_KEY = Input.Keys.X;
 
 export class NonPlayer extends Actor {
-    constructor(resource) {
+    name;
+
+    constructor(name, width, height, spriteWidth, spriteHeight, resource, collisionType) {
         super({
-            collisionType: CollisionType.Fixed,
-            height: resource.height,
-            width: resource.width,
+            height: resource.height/spriteHeight,
+            width: resource.width/spriteWidth,
+            collisionType: collisionType,
         });
+
+        this.name = name;
+        this.scale = new Vector(width / (resource.width / spriteWidth), height / (resource.height / spriteHeight));
     }
 
     interAct(engine) {
@@ -18,7 +24,7 @@ export class NonPlayer extends Actor {
     onInitialize(engine) {
         this.on('precollision', (event) => {
             let isPressingInteractionKey = engine.input.keyboard.wasPressed(INPUT_INTERACT_KEY);
-            if (isPressingInteractionKey) {
+            if (isPressingInteractionKey && event.other instanceof Player) {
                 this.interAct(engine, event);
             }
         })

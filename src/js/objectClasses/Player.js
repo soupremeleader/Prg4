@@ -13,60 +13,69 @@ const DOWN_VELOCITY = 50;
 
 let isLeftFacing = true;
 
-let sprite0, sprite1, sprite2, sprite3, sprite4, idleAnimation, walkingLeftAnimation, walkingRightAnimation;
+let sprite0, sprite1, sprite2, sprite3, sprite4;
 
 export class Player extends Actor {
-    constructor() {
+    idleAnimation;
+    walkingLeftAnimation;
+    walkingRightAnimation;
+    sceneName;
+    constructor(scene) {
         super({
             collisionType: CollisionType.Active,
             height: 131,
             width: 108,
         });
+        this.sceneName = scene;
         this.initGraphics();
     }
 
     onPostUpdate(_engine, _delta) {
-        let isPressingMoveUpKey = _engine.input.keyboard.isHeld(INPUT_KEY_UP);
-        let isPressingMoveLeftKey = _engine.input.keyboard.isHeld(INPUT_KEY_LEFT);
-        let isPressingMoveRightKey = _engine.input.keyboard.isHeld(INPUT_KEY_RIGHT);
-        let isPressingMoveDownKey = _engine.input.keyboard.isHeld(INPUT_KEY_DOWN);
+        if (this.sceneName === "startScreen") {
+            this.graphics.use(this.walkingRightAnimation)
+        } else {
+            let isPressingMoveUpKey = _engine.input.keyboard.isHeld(INPUT_KEY_UP);
+            let isPressingMoveLeftKey = _engine.input.keyboard.isHeld(INPUT_KEY_LEFT);
+            let isPressingMoveRightKey = _engine.input.keyboard.isHeld(INPUT_KEY_RIGHT);
+            let isPressingMoveDownKey = _engine.input.keyboard.isHeld(INPUT_KEY_DOWN);
 
-        let x = 0;
-        let y = 0;
-        if (isPressingMoveUpKey) {
-            y = UP_VELOCITY;
-            isLeftFacing ? this.graphics.use(walkingLeftAnimation) : this.graphics.use(walkingRightAnimation);
-        }
-
-        if (isPressingMoveLeftKey) {
-            x = LEFT_VELOCITY;
-            this.graphics.use(walkingLeftAnimation);
-
-            if (!isLeftFacing) {
-                isLeftFacing = !isLeftFacing;
+            let x = 0;
+            let y = 0;
+            if (isPressingMoveUpKey) {
+                y = UP_VELOCITY;
+                isLeftFacing ? this.graphics.use(this.walkingLeftAnimation) : this.graphics.use(this.walkingRightAnimation);
             }
-        }
 
-        if (isPressingMoveRightKey) {
-            x = RIGHT_VELOCITY;
-            this.graphics.use(walkingRightAnimation);
+            if (isPressingMoveLeftKey) {
+                x = LEFT_VELOCITY;
+                this.graphics.use(this.walkingLeftAnimation);
 
-            if (isLeftFacing) {
-                isLeftFacing = !isLeftFacing;
+                if (!isLeftFacing) {
+                    isLeftFacing = !isLeftFacing;
+                }
             }
+
+            if (isPressingMoveRightKey) {
+                x = RIGHT_VELOCITY;
+                this.graphics.use(this.walkingRightAnimation);
+
+                if (isLeftFacing) {
+                    isLeftFacing = !isLeftFacing;
+                }
+            }
+
+            if (isPressingMoveDownKey) {
+                y = DOWN_VELOCITY;
+
+                isLeftFacing ? this.graphics.use(this.walkingLeftAnimation) : this.graphics.use(this.walkingRightAnimation);
+            }
+
+            if (x === 0 && y === 0) {
+                this.graphics.use(this.idleAnimation);
+            }
+
+            this.vel = new Vector(x, y);
         }
-
-        if (isPressingMoveDownKey) {
-            y = DOWN_VELOCITY;
-
-            isLeftFacing ? this.graphics.use(walkingLeftAnimation) : this.graphics.use(walkingRightAnimation);
-        }
-
-        if (x === 0 && y === 0) {
-            this.graphics.use(idleAnimation);
-        }
-
-        this.vel = new Vector(x, y);
     }
 
     initGraphics = () => {
@@ -110,7 +119,7 @@ export class Player extends Actor {
         sprite4.width = 108;
         sprite4.height = 131;
 
-        walkingLeftAnimation = new Animation({
+        this.walkingLeftAnimation = new Animation({
             frames: [
                 {
                     graphic: sprite0,
@@ -131,10 +140,10 @@ export class Player extends Actor {
             ],
         });
 
-        walkingRightAnimation = walkingLeftAnimation.clone();
-        walkingRightAnimation.flipHorizontal = true;
+        this.walkingRightAnimation = this.walkingLeftAnimation.clone();
+        this.walkingRightAnimation.flipHorizontal = true;
 
-        idleAnimation = new Animation({
+        this.idleAnimation = new Animation({
             frames: [
                 {
                     graphic: sprite3,

@@ -1,6 +1,7 @@
 import {Actor, CollisionType, SpriteSheet, Input, Vector} from "excalibur";
-import {Resources} from "../resources.js";
-import {InventoryItem} from "./InventoryItem.js";
+import {Resources} from "../../resources.js";
+import {InventoryItem} from "./InventoryItem/InventoryItem.js";
+import {GlassBottleInventoryItem} from "./InventoryItem/GlassBottleInventoryItem.js";
 
 const INPUT_KEY_ONE = Input.Keys.Digit1;
 const INPUT_KEY_TWO = Input.Keys.Digit2;
@@ -33,16 +34,22 @@ export class Inventory extends Actor {
     onPostUpdate(engine, delta) {
         if (engine.input.keyboard.wasPressed(INPUT_KEY_ONE)) {
             this.graphics.use(inventorySlot1Highlighted);
+            localStorage.setItem("inventorySlot", "1");
         } else if (engine.input.keyboard.wasPressed(INPUT_KEY_TWO)) {
             this.graphics.use(inventorySlot2Highlighted);
+            localStorage.setItem("inventorySlot", "2");
         } else if (engine.input.keyboard.wasPressed(INPUT_KEY_THREE)) {
             this.graphics.use(inventorySlot3Highlighted);
+            localStorage.setItem("inventorySlot", "3");
         } else if (engine.input.keyboard.wasPressed(INPUT_KEY_FOUR)) {
             this.graphics.use(inventorySlot4Highlighted);
+            localStorage.setItem("inventorySlot", "4");
         } else if (engine.input.keyboard.wasPressed(INPUT_KEY_FIVE)) {
             this.graphics.use(inventorySlot5Highlighted);
+            localStorage.setItem("inventorySlot", "5");
         } else if (engine.input.keyboard.wasPressed(INPUT_KEY_SIX)) {
             this.graphics.use(inventorySlot6Highlighted);
+            localStorage.setItem("inventorySlot", "6");
         }
 
         for (let i = 0; i < this.inventory.length; i++) {
@@ -50,6 +57,13 @@ export class Inventory extends Actor {
                 this.inventory[i][1] = true;
                 engine.add(this.inventoryActors[i]);
                 console.log(engine.currentScene.actors);
+            }
+                // console.log(this.inventory[i][1])
+            if (localStorage.getItem(this.inventory[i][0]) === "false" && this.inventory[i][1]) {
+                this.inventory[i][1] = false;
+                this.leaf = new InventoryItem("leaf", 40, 40, 1, 1, Resources.DriedLeaf);
+                this.leaf.pos = new Vector((screen.width/2 - 72), (screen.height - 250));
+                this.inventoryActors[2] = this.leaf;
             }
         }
     }
@@ -95,19 +109,19 @@ export class Inventory extends Actor {
         inventorySlot1Highlighted.height = 50;
         this.graphics.use(inventorySlot1Highlighted);
 
-        this.feather = new InventoryItem("feather", 40, 40, Resources.Feather);
+        this.feather = new InventoryItem("feather", 40, 40, 1, 1, Resources.Feather);
         this.feather.pos = new Vector((screen.width/2 - 120), (screen.height - 250));
 
-        this.leaf = new InventoryItem("leaf", 40, 40, Resources.Leaf);
+        this.leaf = new InventoryItem("leaf", 40, 40, 1, 1, Resources.GreenLeaf);
         this.leaf.pos = new Vector((screen.width/2 - 72), (screen.height - 250));
 
-        this.stars = new InventoryItem("stars", 40, 40, Resources.Stars);
+        this.stars = new InventoryItem("stars", 40, 40, 1, 1, Resources.Stars);
         this.stars.pos = new Vector((screen.width/2 - 24), (screen.height - 250));
 
-        this.glass = new InventoryItem("glass", 40, 40, Resources.Glass);
+        this.glass = new GlassBottleInventoryItem("glass", 40, 40, 1, 1, Resources.Glass);
         this.glass.pos = new Vector((screen.width/2 + 24), (screen.height - 250));
 
-        this.wateringCan = new InventoryItem("wateringCan", 40, 40, Resources.WateringCan);
+        this.wateringCan = new InventoryItem("wateringCan", 40, 40, 1, 1, Resources.WateringCan);
         this.wateringCan.pos = new Vector((screen.width/2 + 72), (screen.height - 250));
 
         this.inventoryActors = [this.feather, this.stars, this.leaf, this.wateringCan, this.glass];

@@ -1,10 +1,11 @@
-import {NonPlayer} from "./NonPlayer.js";
+import {NonPlayer} from "../NonPlayer.js";
 
 export class Door extends NonPlayer {
     doorLeadsToScene
-    constructor(newWidth, newHeight, doorLeadsToScene) {
-        super(newWidth, newHeight);
+    constructor(name, width, height, spriteWidth, spriteHeight,  resource, collisionType, doorLeadsToScene) {
+        super(name, width, height, spriteWidth, spriteHeight, resource, collisionType);
         this.doorLeadsToScene = doorLeadsToScene;
+        this.graphics.use(resource.toSprite());
     }
 
     onInitialize(engine) {
