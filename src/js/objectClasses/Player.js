@@ -23,8 +23,7 @@ export class Player extends Actor {
     constructor(scene) {
         super({
             collisionType: CollisionType.Active,
-            height: 131,
-            width: 108,
+            radius: 62
         });
         this.sceneName = scene;
         this.initGraphics();
@@ -58,7 +57,6 @@ export class Player extends Actor {
             if (isPressingMoveRightKey) {
                 x = RIGHT_VELOCITY;
                 this.graphics.use(this.walkingRightAnimation);
-
                 if (isLeftFacing) {
                     isLeftFacing = !isLeftFacing;
                 }
@@ -72,6 +70,10 @@ export class Player extends Actor {
 
             if (x === 0 && y === 0) {
                 this.graphics.use(this.idleAnimation);
+            } else if (x === 0) {
+                y *= 75/50;
+            } else if (y === 0) {
+                x *= 75/50;
             }
 
             this.vel = new Vector(x, y);

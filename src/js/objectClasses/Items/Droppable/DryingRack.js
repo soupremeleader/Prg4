@@ -1,9 +1,17 @@
 import {Droppable} from "./Droppable.js";
 import {Collectable} from "../Collectable/Collectable.js";
 import {Resources} from "../../../resources.js";
-import {Animation, AnimationStrategy, CollisionType, SpriteSheet, Vector} from "excalibur";
+import {
+    ActionSequence,
+    Animation,
+    AnimationStrategy,
+    CollisionType,
+    EasingFunctions,
+    SpriteSheet,
+    Vector
+} from "excalibur";
 
-let sprite0, sprite1, sprite2, sprite3, dryingRackAnimation;
+let sprite0, sprite1, sprite2, sprite3;
 
 export class DryingRack extends Droppable {
     hasBrowned;
@@ -12,23 +20,37 @@ export class DryingRack extends Droppable {
         super(name, width, height, spriteWidth, spriteHeight, resource, collisionType);
         this.resource = resource;
         this.graphics.use(resource.toSprite());
-        this.hasBrowned = false;
         this.initGraphics();
     }
 
     interAct(engine) {
-        if (this.hasBrowned && !this.hasDropped) {
-            let driedLeaf = new Collectable("leaf", 50, 50, 1, 1, Resources.DriedLeaf, CollisionType.Active);
-            driedLeaf.pos = new Vector(350, 350);
-            engine.add(driedLeaf);
-            this.hasDropped = true;
-            this.graphics.use(this.resource.toSprite());
-        } else if (!this.hasBrowned && localStorage.getItem("inventorySlot") === "2" && localStorage.getItem("leaf") === "true") {
-            this.graphics.use(dryingRackAnimation);
+        if (!this.dryingRackAnimation.done && localStorage.getItem("inventorySlot") === "2" && localStorage.getItem("leaf") === "true") {
+            this.graphics.use(this.dryingRackAnimation);
             localStorage.removeItem("leaf");
             localStorage.setItem("leaf", "false");
             this.hasBrowned = true;
             localStorage.setItem("hasBrowned", "true");
+        } else if (this.dryingRackAnimation.done && !this.hasDropped) {
+            let driedLeaf = new Collectable("leaf", 50, 50, 1, 1, Resources.DriedLeaf, CollisionType.Active);
+            driedLeaf.pos = new Vector(600, 440);
+            engine.add(driedLeaf);
+            let leafDrop = new ActionSequence(
+                driedLeaf,
+                (actionContext) => {
+                    actionContext
+                        .easeTo(new Vector(588, 450), 150, EasingFunctions.EaseInQuad)
+                        .easeTo(new Vector(576, 415), 100, EasingFunctions.EaseInQuad)
+                        .easeTo(new Vector(564, 400), 100, EasingFunctions.EaseInQuad)
+                        .easeTo(new Vector(562, 415), 100, EasingFunctions.EaseOutQuad)
+                        .easeTo(new Vector(550, 450), 150, EasingFunctions.EaseOutQuad)
+                        .easeTo(new Vector(538, 475), 150, EasingFunctions.EaseOutQuad)
+                        .easeTo(new Vector(526, 460), 150, EasingFunctions.EaseInQuad)
+                        .easeTo(new Vector(514, 475), 150, EasingFunctions.EaseOutQuad)
+                }
+            );
+            driedLeaf.actions.runAction(leafDrop);
+            this.hasDropped = true;
+            this.graphics.use(this.resource.toSprite());
         }
     }
 
@@ -64,7 +86,7 @@ export class DryingRack extends Droppable {
         sprite3.height = 132;
 
 
-        dryingRackAnimation = new Animation({
+        this.dryingRackAnimation = new Animation({
             frames: [
                 {
                     graphic: sprite0,

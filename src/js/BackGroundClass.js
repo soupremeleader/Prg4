@@ -1,22 +1,24 @@
 import { Actor, Vector, GraphicsGroup } from 'excalibur'
-import { Resources } from './resources.js'
 
 
 export class Background extends Actor {
 
-    offset
+    offset;
+    resource;
+    velocity;
 
-    constructor(width, height, spriteWidth, resource) {
+    constructor(width, height, spriteWidth, resource, vel) {
         super({
             height: resource.height,
             width: resource.width/spriteWidth,
         });
-
+        this.resource = resource;
         this.scale = new Vector(width / (resource.width / spriteWidth), height / (resource.height));
+        this.velocity = vel;
     }
 
     onInitialize(engine){
-        const spaceImage = Resources.Background.toSprite()
+        const spaceImage = this.resource.toSprite()
         this.offset = spaceImage.width
 
         const group = new GraphicsGroup({
@@ -35,7 +37,7 @@ export class Background extends Actor {
         this.graphics.anchor = new Vector(0,0)
         this.graphics.add(group)
         this.pos = new Vector(0, 0)
-        this.vel = new Vector(-110, 0)
+        this.vel = new Vector(this.velocity, 0)
     }
 
     onPostUpdate(engine, delta) {

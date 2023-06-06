@@ -1,4 +1,4 @@
-import {Actor, Input, Vector} from "excalibur";
+import {Actor, CollisionType, Input, Vector} from "excalibur";
 import {Player} from "./Player.js";
 
 const INPUT_INTERACT_KEY = Input.Keys.X;
@@ -6,11 +6,11 @@ const INPUT_INTERACT_KEY = Input.Keys.X;
 export class NonPlayer extends Actor {
     name;
 
-    constructor(name, width, height, spriteWidth, spriteHeight, resource, collisionType) {
+    constructor(name, width, height, spriteWidth, spriteHeight, resource) {
         super({
             height: resource.height/spriteHeight,
             width: resource.width/spriteWidth,
-            collisionType: collisionType,
+            collisionType: CollisionType.Passive,
         });
 
         this.name = name;

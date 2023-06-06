@@ -62,7 +62,7 @@ export class Inventory extends Actor {
             if (localStorage.getItem(this.inventory[i][0]) === "false" && this.inventory[i][1]) {
                 this.inventory[i][1] = false;
                 this.leaf = new InventoryItem("leaf", 40, 40, 1, 1, Resources.DriedLeaf);
-                this.leaf.pos = new Vector((screen.width/2 - 72), (screen.height - 250));
+                this.leaf.pos = new Vector((screen.width/2 - 72), (screen.height - 200));
                 this.inventoryActors[2] = this.leaf;
             }
         }
@@ -110,19 +110,19 @@ export class Inventory extends Actor {
         this.graphics.use(inventorySlot1Highlighted);
 
         this.feather = new InventoryItem("feather", 40, 40, 1, 1, Resources.Feather);
-        this.feather.pos = new Vector((screen.width/2 - 120), (screen.height - 250));
+        this.feather.pos = new Vector((screen.width/2 - 120), (screen.height - 200));
 
         this.leaf = new InventoryItem("leaf", 40, 40, 1, 1, Resources.GreenLeaf);
-        this.leaf.pos = new Vector((screen.width/2 - 72), (screen.height - 250));
+        this.leaf.pos = new Vector((screen.width/2 - 72), (screen.height - 200));
 
         this.stars = new InventoryItem("stars", 40, 40, 1, 1, Resources.Stars);
-        this.stars.pos = new Vector((screen.width/2 - 24), (screen.height - 250));
+        this.stars.pos = new Vector((screen.width/2 - 24), (screen.height - 200));
 
         this.glass = new GlassBottleInventoryItem("glass", 40, 40, 1, 1, Resources.Glass);
-        this.glass.pos = new Vector((screen.width/2 + 24), (screen.height - 250));
+        this.glass.pos = new Vector((screen.width/2 + 24), (screen.height - 200));
 
         this.wateringCan = new InventoryItem("wateringCan", 40, 40, 1, 1, Resources.WateringCan);
-        this.wateringCan.pos = new Vector((screen.width/2 + 72), (screen.height - 250));
+        this.wateringCan.pos = new Vector((screen.width/2 + 72), (screen.height - 200));
 
         this.inventoryActors = [this.feather, this.stars, this.leaf, this.wateringCan, this.glass];
 

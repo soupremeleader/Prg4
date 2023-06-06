@@ -17,9 +17,16 @@ import dryingRackImage from '../images/drying rack.png'
 import growingPlantImage from '../images/plant growing.png'
 import activeDryingRackImage from '../images/drying rack spritesheet.png'
 import crowImage from '../images/crow.png'
-import backgroundImage from '../images/bg start screen.png'
+import startSkyImage from '../images/bg sky start screen.png'
+import startGrassImage from '../images/bg grass start screen.png'
 import sunImage from '../images/sun.png'
 import startButtonImage from '../images/start button.png'
+import gamePlayBackgroundImage from '../images/outside temp.png'
+import outsideSkyImage from '../images/sky bg.png'
+import tileBlockImage from '../images/tilemap block.png'
+import treeBackgroundImage from '../images/tree bg.png'
+import blinkingStarImage from '../images/star blinks.png'
+import insideBackgroundImage from '../images/inside bg.png'
 
 const Resources = {
     Player: new ImageSource(playerImage),
@@ -40,9 +47,17 @@ const Resources = {
     GreenLeaf: new ImageSource(greenLeafImage),
     ActiveDryingRack: new ImageSource(activeDryingRackImage),
     Crow: new ImageSource(crowImage),
-    Background: new ImageSource(backgroundImage),
+    StartSky: new ImageSource(startSkyImage),
+    StartGrass: new ImageSource(startGrassImage),
     Sun: new ImageSource(sunImage),
     StartButton: new ImageSource(startButtonImage),
+    OutsideBackground: new ImageSource(gamePlayBackgroundImage),
+    OutsideSky: new ImageSource(outsideSkyImage),
+    TileBlock: new ImageSource(tileBlockImage),
+    TreeBackground: new ImageSource(treeBackgroundImage),
+    BlinkingStar: new ImageSource(blinkingStarImage),
+    InsideBackground: new ImageSource(insideBackgroundImage),
+
 }
 const ResourceLoader = new Loader([
     Resources.Player,
@@ -63,9 +78,16 @@ const ResourceLoader = new Loader([
     Resources.GreenLeaf,
     Resources.ActiveDryingRack,
     Resources.Crow,
-    Resources.Background,
+    Resources.StartSky,
+    Resources.StartGrass,
     Resources.Sun,
     Resources.StartButton,
+    Resources.OutsideBackground,
+    Resources.OutsideSky,
+    Resources.TileBlock,
+    Resources.TreeBackground,
+    Resources.BlinkingStar,
+    Resources.InsideBackground,
 ])
 
 ResourceLoader.suppressPlayButton = true;

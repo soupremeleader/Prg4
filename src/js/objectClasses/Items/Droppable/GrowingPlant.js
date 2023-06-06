@@ -1,4 +1,11 @@
-import {Animation, AnimationStrategy, SpriteSheet} from "excalibur";
+import {
+    ActionSequence,
+    Animation,
+    AnimationStrategy,
+    EasingFunctions,
+    SpriteSheet,
+    Vector
+} from "excalibur";
 import {Resources} from "../../../resources.js";
 import {Droppable} from "./Droppable.js";
 
@@ -7,8 +14,8 @@ let sprite0, sprite1, sprite2;
 export class GrowingPlant extends Droppable {
     growingPlantAnimation;
 
-    constructor(name, width, height, spriteWidth, spriteHeight,  resource, collisionType, child) {
-        super(name, width, height, spriteWidth, spriteHeight,  resource, collisionType, child);
+    constructor(name, width, height, spriteWidth, spriteHeight, resource, collisionType, child) {
+        super(name, width, height, spriteWidth, spriteHeight, resource, collisionType, child);
         this.initGraphics()
         this.graphics.use(sprite0);
     }
@@ -16,8 +23,27 @@ export class GrowingPlant extends Droppable {
     interAct(engine) {
         if (localStorage.getItem("inventorySlot") === "5" && localStorage.getItem("watering can") === "true") {
             if (this.growingPlantAnimation.done) {
-                super.interAct(engine);
-            } else if (!this.hasDropped){
+                if (!this.hasDropped) {
+                    engine.add(this.child);
+                    let leafDrop = new ActionSequence(
+                        this.child,
+                        (actionContext) => {
+                            actionContext
+                                .easeTo(new Vector(495, 650), 150, EasingFunctions.EaseInQuad)
+                                .easeTo(new Vector(508, 615), 100, EasingFunctions.EaseInQuad)
+                                .easeTo(new Vector(520, 600), 100, EasingFunctions.EaseInQuad)
+                                .easeTo(new Vector(532, 615), 100, EasingFunctions.EaseOutQuad)
+                                .easeTo(new Vector(545, 650), 150, EasingFunctions.EaseOutQuad)
+                                .easeTo(new Vector(570, 675), 150, EasingFunctions.EaseOutQuad)
+                                .easeTo(new Vector(590, 660), 150, EasingFunctions.EaseInQuad)
+                                .easeTo(new Vector(600, 675), 150, EasingFunctions.EaseOutQuad)
+                        }
+                    );
+                    this.child.actions.runAction(leafDrop);
+
+                    this.hasDropped = true;
+                }
+            } else if (!this.hasDropped) {
                 this.graphics.use(this.growingPlantAnimation);
             }
         }
@@ -46,7 +72,7 @@ export class GrowingPlant extends Droppable {
         sprite2.width = 110;
         sprite2.height = 98;
 
-        this.growingPlantAnimation = new Animation( {
+        this.growingPlantAnimation = new Animation({
             frames: [
                 {
                     graphic: sprite0,
@@ -64,4 +90,5 @@ export class GrowingPlant extends Droppable {
             strategy: AnimationStrategy.Freeze
         })
     }
+
 }

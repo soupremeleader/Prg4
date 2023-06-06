@@ -1,4 +1,4 @@
-import {Animation, AnimationStrategy, SpriteSheet} from "excalibur";
+import {ActionSequence, Animation, AnimationStrategy, EasingFunctions, SpriteSheet, Vector} from "excalibur";
 import {Resources} from "../../../resources.js";
 import {Droppable} from "./Droppable.js";
 
@@ -14,12 +14,30 @@ export class Crow extends Droppable {
     }
 
     interAct(engine) {
-        this.graphics.use(this.crowAnimation);
+        if (!this.hasDropped) {
+            this.graphics.use(this.crowAnimation);
+        }
     }
 
     onPostUpdate(_engine, _delta) {
-        if (this.crowAnimation.done) {
-            super.interAct(_engine);
+        if (this.crowAnimation.done && !this.hasDropped) {
+            _engine.add(this.child);
+            let featherDrop = new ActionSequence(
+                this.child,
+                (actionContext) => {
+                    actionContext
+                        .easeTo(new Vector(965, 520), 200, EasingFunctions.EaseOutQuad)
+                        .rotateTo(-1/6,1)
+                        .easeTo(new Vector(970, 533), 200, EasingFunctions.EaseOutQuad)
+                        .easeTo(new Vector(985, 530), 200, EasingFunctions.EaseInQuad)
+                        .easeTo(new Vector(990, 527), 200, EasingFunctions.EaseOutQuad)
+                        .easeTo(new Vector(993, 530), 200, EasingFunctions.EaseOutQuad)
+                        .rotateTo(0,1)
+                        .easeTo(new Vector(996, 533), 200, EasingFunctions.EaseOutQuad)
+                }
+            );
+            this.child.actions.runAction(featherDrop);
+            this.hasDropped = true;
         }
     }
 
