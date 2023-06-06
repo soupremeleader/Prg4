@@ -24,7 +24,7 @@ export class DryingRack extends Droppable {
     }
 
     interAct(engine) {
-        if (!this.dryingRackAnimation.done && localStorage.getItem("inventorySlot") === "2" && localStorage.getItem("leaf") === "true") {
+        if (!this.dryingRackAnimation.done && localStorage.getItem("inventorySlot") === "1" && localStorage.getItem("leaf") === "true") {
             this.graphics.use(this.dryingRackAnimation);
             localStorage.removeItem("leaf");
             localStorage.setItem("leaf", "false");

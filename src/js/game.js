@@ -13,8 +13,10 @@ import {Crow} from "./objectClasses/Items/Droppable/Crow.js";
 import {Background} from "./BackGroundClass.js";
 import {StartButton} from "./objectClasses/StartButton.js";
 import {OutsideBackground} from "./objectClasses/OutsideBackground.js";
-import {placeTiles} from "./tilemapPlacement.js";
+import {TilemapPlacement} from "./TilemapPlacement.js";
 import {Telescope} from "./objectClasses/Items/Droppable/Telescope.js";
+import {InsideScene} from "./objectClasses/InsideScene.js";
+import {NonPlayer} from "./objectClasses/NonPlayer.js";
 
 export class Game extends Engine {
 
@@ -38,11 +40,8 @@ export class Game extends Engine {
         const outsideBackground = new OutsideBackground(visualViewport.width, visualViewport.height, 1, 1, Resources.OutsideBackground, CollisionType.PreventCollision);
         outsideBackground.pos = new Vector(visualViewport.width/2, visualViewport.height/2)
 
-        const toOutsideDoor = new Door("door", 80, 100, 1, 1, Resources.Door, CollisionType.Passive, "outsideScene");
-        toOutsideDoor.pos = new Vector(710, 400);
-
-        const toInsideDoor = new Door("door", 80, 100, 1, 1, CollisionType.Passive, "root");
-        toInsideDoor.pos = new Vector(700, 400);
+        const toInsideDoor = new Door("door", 80, 100, 1, 1, Resources.Door, "insideScene");
+        toInsideDoor.pos = new Vector(710, 400);
 
         const feather = new Collectable("feather", 30, 38, 1, 1, Resources.Feather, CollisionType.Passive);
         feather.pos = new Vector(917, 510);
@@ -72,7 +71,7 @@ export class Game extends Engine {
         crow.pos = new Vector(917, 510);
 
         const inventory = new Inventory();
-        inventory.pos = new Vector(screen.width/2, (screen.height - 200));
+        inventory.pos = new Vector(visualViewport.width/2, (screen.height - 200));
 
         const outsideScene = new Scene();
         this.add("outsideScene", outsideScene);
@@ -81,7 +80,7 @@ export class Game extends Engine {
         outsideScene.add(outsideBackground);
         outsideScene.add(dryingRack);
         outsideScene.add(player);
-        outsideScene.add(toOutsideDoor);
+        outsideScene.add(toInsideDoor);
         outsideScene.add(wateringCan);
         outsideScene.add(telescope);
         outsideScene.add(glass);
@@ -90,15 +89,30 @@ export class Game extends Engine {
 
         outsideScene.add(crow);
 
-        placeTiles(this, outsideScene);
+        new TilemapPlacement(this, outsideScene);
 
 
         const insideBackground = new OutsideBackground(visualViewport.width, visualViewport.height, 1, 1, Resources.InsideBackground, CollisionType.PreventCollision);
+        insideBackground.pos = new Vector(visualViewport.width/2, visualViewport.height/2);
 
-        const insideScene = new Scene();
+        const insideLeaf = new NonPlayer("leaf", -530, -530, 1, 1, Resources.DriedLeaf);
+        insideLeaf.pos = new Vector(screen.width/2-85, screen.height/2);
+        insideLeaf.rotation = -1/3;
+
+        const insideInk = new NonPlayer("stars", 350, 250, 1, 1, Resources.InsideInkBottle);
+        insideInk.pos = new Vector(1320, 520);
+
+        const insideFeather = new NonPlayer("feather", -190, -290, 1, 1, Resources.Feather);
+        insideFeather.pos = new Vector(1070, 510);
+        insideFeather.rotation = 1/5;
+
+        const insideScene = new InsideScene(insideLeaf, insideInk, insideFeather);
         this.add("insideScene", insideScene);
 
         insideScene.add(insideBackground);
+        insideScene.add(insideLeaf);
+        insideScene.add(insideInk);
+        insideScene.add(insideFeather);
 
         const sun = new Actor({width: Resources.Sun.width, height:Resources.Sun.width, collisionType: CollisionType.Fixed, pos: new Vector(screen.width*7/10, screen.height*3/16)});
         sun.graphics.use(Resources.Sun.toSprite());

@@ -2,8 +2,8 @@ import {NonPlayer} from "../NonPlayer.js";
 
 export class Door extends NonPlayer {
     doorLeadsToScene
-    constructor(name, width, height, spriteWidth, spriteHeight,  collisionType, doorLeadsToScene) {
-        super(name, width, height, spriteWidth, spriteHeight, collisionType);
+    constructor(name, width, height, spriteWidth, spriteHeight, resource, doorLeadsToScene) {
+        super(name, width, height, spriteWidth, spriteHeight, resource);
         this.doorLeadsToScene = doorLeadsToScene;
     }
 

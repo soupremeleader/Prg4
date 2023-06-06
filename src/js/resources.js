@@ -27,6 +27,8 @@ import tileBlockImage from '../images/tilemap block.png'
 import treeBackgroundImage from '../images/tree bg.png'
 import blinkingStarImage from '../images/star blinks.png'
 import insideBackgroundImage from '../images/inside bg.png'
+import inkBottleImage from '../images/glass bottle with stars.png'
+import insideInkBottleImage from '../images/ìnside inkbottle.png'
 
 const Resources = {
     Player: new ImageSource(playerImage),
@@ -57,6 +59,8 @@ const Resources = {
     TreeBackground: new ImageSource(treeBackgroundImage),
     BlinkingStar: new ImageSource(blinkingStarImage),
     InsideBackground: new ImageSource(insideBackgroundImage),
+    InkBottle: new ImageSource(inkBottleImage),
+    InsideInkBottle: new ImageSource(insideInkBottleImage),
 
 }
 const ResourceLoader = new Loader([
@@ -88,6 +92,8 @@ const ResourceLoader = new Loader([
     Resources.TreeBackground,
     Resources.BlinkingStar,
     Resources.InsideBackground,
+    Resources.InkBottle,
+    Resources.InsideInkBottle,
 ])
 
 ResourceLoader.suppressPlayButton = true;

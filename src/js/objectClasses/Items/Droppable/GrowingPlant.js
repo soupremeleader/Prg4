@@ -21,7 +21,7 @@ export class GrowingPlant extends Droppable {
     }
 
     interAct(engine) {
-        if (localStorage.getItem("inventorySlot") === "5" && localStorage.getItem("watering can") === "true") {
+        if (localStorage.getItem("inventorySlot") === "4" && localStorage.getItem("watering can") === "true") {
             if (this.growingPlantAnimation.done) {
                 if (!this.hasDropped) {
                     engine.add(this.child);

@@ -7,7 +7,7 @@ export class FallenStar extends Collectable {
     }
 
     interAct(engine) {
-        if (localStorage.getItem("inventorySlot") === "4" && localStorage.getItem("glass bottle") === "true") {
+        if (localStorage.getItem("inventorySlot") === "3" && localStorage.getItem("glass bottle") === "true") {
             localStorage.setItem(this.name, "true");
             this.kill();
         }
